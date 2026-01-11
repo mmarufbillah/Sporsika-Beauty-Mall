@@ -4,365 +4,323 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sporsika Beauty Mall | Premium Skincare & Makeup</title>
+    
+    <!-- Frameworks & Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     
     <style>
-        body { font-family: 'Poppins', sans-serif; }
+        :root {
+            --gold: #D4AF37;
+            --soft-pink: #FFF1F2;
+        }
+        body { font-family: 'Poppins', sans-serif; scroll-behavior: smooth; overflow-x: hidden; }
         .font-serif { font-family: 'Playfair Display', serif; }
-        .gold-text { color: #B8860B; }
-        .gold-bg { background-color: #D4AF37; }
-        .soft-pink-bg { background-color: #FFF1F2; }
         
-        .product-card:hover .cart-btn {
-            transform: translateY(0);
-            opacity: 1;
-        }
-        .cart-btn {
-            transform: translateY(20px);
+        /* Custom Animations */
+        .reveal {
             opacity: 0;
-            transition: all 0.3s ease;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
         }
-        .sticky-header {
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
         }
+        
+        .hover-zoom img {
+            transition: transform 0.5s ease;
+        }
+        .hover-zoom:hover img {
+            transform: scale(1.1);
+        }
+
+        .gold-gradient {
+            background: linear-gradient(45deg, #B8860B, #D4AF37, #F5DEB3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
         /* Cart Drawer Animation */
         #cart-drawer {
-            transition: transform 0.3s ease-in-out;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             transform: translateX(100%);
         }
-        #cart-drawer.open {
-            transform: translateX(0);
+        #cart-drawer.open { transform: translateX(0); }
+
+        /* Floating Animation for Hero Image */
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
         }
+        .floating-anim { animation: floating 4s ease-in-out infinite; }
     </style>
 </head>
 <body class="bg-white text-gray-800">
 
-    <!-- Header / Navigation -->
-    <header class="bg-white sticky top-0 z-50 border-b border-pink-100">
+    <!-- Header -->
+    <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-pink-100">
         <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <!-- Mobile Menu Icon -->
-            <div class="md:hidden flex items-center">
-                <button id="mobile-menu-btn" class="text-2xl"><i class="fa-solid fa-bars"></i></button>
+            <div class="md:hidden">
+                <button id="mobile-menu-btn" class="text-2xl text-pink-600"><i class="fa-solid fa-bars-staggered"></i></button>
             </div>
 
-            <!-- Logo -->
-            <div class="text-2xl font-serif font-bold tracking-widest text-pink-600">
+            <div class="text-2xl font-serif font-bold tracking-[0.2em] text-pink-600">
                 SPORSIKA <span class="text-gray-400 font-light">BEAUTY</span>
             </div>
 
-            <!-- Desktop Menu -->
-            <div class="hidden md:flex space-x-8 font-medium uppercase text-xs tracking-widest">
+            <div class="hidden md:flex space-x-8 font-medium uppercase text-[10px] tracking-widest">
                 <a href="#home" class="hover:text-pink-500 transition">Home</a>
                 <a href="#shop" class="hover:text-pink-500 transition">Shop</a>
                 <a href="#categories" class="hover:text-pink-500 transition">Categories</a>
                 <a href="#contact" class="hover:text-pink-500 transition">Contact</a>
             </div>
 
-            <!-- Icons -->
-            <div class="flex items-center space-x-5 text-xl">
-                <a href="#"><i class="fa-solid fa-magnifying-glass text-sm"></i></a>
-                <button id="open-cart" class="relative">
-                    <i class="fa-solid fa-bag-shopping"></i>
-                    <span id="cart-count" class="absolute -top-2 -right-2 bg-pink-500 text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center">0</span>
+            <div class="flex items-center space-x-5">
+                <button id="open-cart" class="relative group">
+                    <i class="fa-solid fa-bag-shopping text-2xl group-hover:text-pink-500 transition"></i>
+                    <span id="cart-count" class="absolute -top-2 -right-2 bg-pink-500 text-white text-[10px] rounded-full w-5 h-5 flex items-center justify-center animate-pulse">0</span>
                 </button>
             </div>
         </nav>
-
-        <!-- Mobile Side Menu -->
-        <div id="mobile-menu" class="fixed inset-0 bg-white z-50 flex flex-col items-center justify-center space-y-8 text-xl font-medium hidden">
-            <button id="close-mobile-menu" class="absolute top-6 right-6 text-3xl">&times;</button>
-            <a href="#home" class="mobile-link">Home</a>
-            <a href="#shop" class="mobile-link">Shop</a>
-            <a href="#categories" class="mobile-link">Categories</a>
-            <a href="#contact" class="mobile-link">Contact</a>
-        </div>
     </header>
 
     <!-- Hero Section -->
-    <section id="home" class="relative h-[80vh] flex items-center soft-pink-bg overflow-hidden">
-        <div class="container mx-auto px-6 grid md:grid-cols-2 gap-8 items-center">
-            <div class="z-10">
-                <h2 class="gold-text uppercase tracking-widest mb-4 font-semibold">New Collection 2024</h2>
-                <h1 class="text-5xl md:text-7xl font-serif mb-6 leading-tight">Glow Like a <br> <span class="text-pink-400 italic text-4xl md:text-6xl">Goddess</span></h1>
-                <p class="text-gray-600 mb-8 max-w-md">Discover our curated selection of premium skincare and makeup essentials designed to reveal your natural beauty.</p>
-                <a href="#shop" class="inline-block bg-pink-500 text-white px-10 py-4 rounded-full font-semibold hover:bg-pink-600 transition shadow-lg">Shop Now</a>
+    <section id="home" class="relative min-h-[90vh] flex items-center bg-[#FFF9F9] overflow-hidden">
+        <div class="container mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
+            <div class="animate__animated animate__fadeInLeft">
+                <h2 class="text-pink-500 uppercase tracking-[0.3em] mb-4 font-semibold text-sm">Est. 2024</h2>
+                <h1 class="text-6xl md:text-8xl font-serif mb-6 leading-tight">True <br> <span class="gold-gradient">Radiance</span></h1>
+                <p class="text-gray-500 mb-8 max-w-md text-lg leading-relaxed">Experience the touch of luxury with Sporsika's premium skincare and makeup collection.</p>
+                <div class="flex space-x-4">
+                    <a href="#shop" class="bg-pink-500 text-white px-8 py-4 rounded-full font-semibold hover:bg-black transition-all shadow-xl hover:-translate-y-1">Shop Collection</a>
+                </div>
             </div>
-            <div class="relative hidden md:block">
-                <div class="w-full h-[500px] bg-pink-200 rounded-full absolute -top-10 -right-10 blur-3xl opacity-30"></div>
-                <img src="https://images.unsplash.com/photo-1596462502278-27bfac4033c8?auto=format&fit=crop&q=80&w=800" alt="Beauty Hero" class="rounded-2xl shadow-2xl relative z-10 w-[90%] mx-auto">
+            <div class="relative animate__animated animate__fadeInRight">
+                <div class="absolute inset-0 bg-pink-200 rounded-full blur-[100px] opacity-20"></div>
+                <img src="https://images.unsplash.com/photo-1596462502278-27bfac4033c8?q=80&w=1000" alt="Beauty" class="rounded-[2rem] shadow-2xl relative z-10 w-full floating-anim">
             </div>
         </div>
     </section>
 
     <!-- Categories Section -->
-    <section id="categories" class="py-20 bg-white">
+    <section id="categories" class="py-24 bg-white reveal">
         <div class="container mx-auto px-6">
             <div class="text-center mb-16">
-                <h2 class="text-3xl font-serif font-bold">Shop by Category</h2>
-                <div class="w-20 h-1 bg-pink-200 mx-auto mt-4"></div>
+                <h2 class="text-4xl font-serif font-bold italic">Curated Collections</h2>
+                <p class="text-gray-400 mt-2 tracking-widest uppercase text-xs">Essential Beauty Categories</p>
             </div>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-                <!-- Category 1 -->
-                <div class="group cursor-pointer">
-                    <div class="overflow-hidden rounded-lg mb-4">
-                        <img src="https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&q=80&w=400" class="w-full h-48 object-cover group-hover:scale-110 transition duration-500" alt="Skincare">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                <!-- Category Items -->
+                <div class="group cursor-pointer text-center">
+                    <div class="relative overflow-hidden rounded-full aspect-square mb-6 border-4 border-pink-50">
+                        <img src="https://images.unsplash.com/photo-1556228578-0d85b1a4d571?q=80&w=400" class="w-full h-full object-cover group-hover:scale-110 transition duration-700" alt="Skincare">
                     </div>
-                    <h3 class="text-center font-semibold">Skincare</h3>
+                    <h3 class="font-serif text-xl group-hover:text-pink-500 transition">Skincare</h3>
                 </div>
-                <!-- Category 2 -->
-                <div class="group cursor-pointer">
-                    <div class="overflow-hidden rounded-lg mb-4">
-                        <img src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&q=80&w=400" class="w-full h-48 object-cover group-hover:scale-110 transition duration-500" alt="Makeup">
+                <div class="group cursor-pointer text-center">
+                    <div class="relative overflow-hidden rounded-full aspect-square mb-6 border-4 border-pink-50">
+                        <img src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=400" class="w-full h-full object-cover group-hover:scale-110 transition duration-700" alt="Makeup">
                     </div>
-                    <h3 class="text-center font-semibold">Makeup</h3>
+                    <h3 class="font-serif text-xl group-hover:text-pink-500 transition">Makeup</h3>
                 </div>
-                <!-- Category 3 -->
-                <div class="group cursor-pointer">
-                    <div class="overflow-hidden rounded-lg mb-4">
-                        <img src="https://images.unsplash.com/photo-1527799822344-42ad8c5827d7?auto=format&fit=crop&q=80&w=400" class="w-full h-48 object-cover group-hover:scale-110 transition duration-500" alt="Haircare">
+                <div class="group cursor-pointer text-center">
+                    <div class="relative overflow-hidden rounded-full aspect-square mb-6 border-4 border-pink-50">
+                        <img src="https://images.unsplash.com/photo-1527799822344-42ad8c5827d7?q=80&w=400" class="w-full h-full object-cover group-hover:scale-110 transition duration-700" alt="Haircare">
                     </div>
-                    <h3 class="text-center font-semibold">Haircare</h3>
+                    <h3 class="font-serif text-xl group-hover:text-pink-500 transition">Haircare</h3>
                 </div>
-                <!-- Category 4 -->
-                <div class="group cursor-pointer">
-                    <div class="overflow-hidden rounded-lg mb-4">
-                        <img src="https://images.unsplash.com/photo-1590439471364-192aa70c0b53?auto=format&fit=crop&q=80&w=400" class="w-full h-48 object-cover group-hover:scale-110 transition duration-500" alt="Accessories">
+                <div class="group cursor-pointer text-center">
+                    <div class="relative overflow-hidden rounded-full aspect-square mb-6 border-4 border-pink-50">
+                        <img src="https://images.unsplash.com/photo-1590439471364-192aa70c0b53?q=80&w=400" class="w-full h-full object-cover group-hover:scale-110 transition duration-700" alt="Accessories">
                     </div>
-                    <h3 class="text-center font-semibold">Accessories</h3>
+                    <h3 class="font-serif text-xl group-hover:text-pink-500 transition">Accessories</h3>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Featured Products Grid -->
-    <section id="shop" class="py-20 soft-pink-bg">
+    <!-- Shop Section -->
+    <section id="shop" class="py-24 bg-[#FFF1F2]/30 reveal">
         <div class="container mx-auto px-6">
-            <div class="flex justify-between items-end mb-12">
+            <div class="flex justify-between items-end mb-16">
                 <div>
-                    <h2 class="text-3xl font-serif font-bold">Featured Products</h2>
-                    <p class="text-gray-500 mt-2">Handpicked essentials for your daily routine.</p>
+                    <h2 class="text-4xl font-serif font-bold">New Arrivals</h2>
+                    <div class="w-24 h-1 bg-pink-300 mt-4"></div>
                 </div>
-                <a href="#" class="text-pink-600 font-semibold border-b-2 border-pink-600">View All</a>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
                 <!-- Product 1 -->
-                <div class="bg-white p-4 rounded-xl product-card relative shadow-sm">
-                    <div class="overflow-hidden rounded-lg mb-4 relative">
-                        <img src="https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&q=80&w=400" alt="Product" class="w-full h-64 object-cover">
-                        <button onclick="addToCart('Rose Glow Serum', 45)" class="cart-btn absolute bottom-4 left-4 right-4 bg-pink-500 text-white py-2 rounded-lg font-medium">Add to Cart</button>
-                    </div>
-                    <p class="text-xs text-gray-400 uppercase tracking-widest mb-1">Skincare</p>
-                    <h3 class="font-semibold mb-2">Rose Glow Serum</h3>
-                    <div class="flex justify-between items-center">
-                        <span class="gold-text font-bold">$45.00</span>
-                        <div class="text-xs text-yellow-400">
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star-half-stroke"></i>
+                <div class="bg-white group rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 reveal">
+                    <div class="relative overflow-hidden aspect-[4/5]">
+                        <img src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?q=80&w=400" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                        <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                            <button onclick="addToCart('Rose Serum', 45)" class="bg-white text-black px-6 py-2 rounded-full font-bold hover:bg-pink-500 hover:text-white transition shadow-lg">Add to Cart</button>
                         </div>
+                    </div>
+                    <div class="p-6 text-center">
+                        <p class="text-xs text-pink-400 font-bold tracking-widest mb-2 uppercase">Skincare</p>
+                        <h3 class="text-lg font-medium mb-2">Golden Glow Serum</h3>
+                        <p class="text-gray-900 font-bold">$45.00</p>
                     </div>
                 </div>
 
                 <!-- Product 2 -->
-                <div class="bg-white p-4 rounded-xl product-card relative shadow-sm">
-                    <div class="overflow-hidden rounded-lg mb-4 relative">
-                        <img src="https://images.unsplash.com/photo-1596704017254-9b121068fb31?auto=format&fit=crop&q=80&w=400" alt="Product" class="w-full h-64 object-cover">
-                        <button onclick="addToCart('Matte Lipstick', 25)" class="cart-btn absolute bottom-4 left-4 right-4 bg-pink-500 text-white py-2 rounded-lg font-medium">Add to Cart</button>
-                    </div>
-                    <p class="text-xs text-gray-400 uppercase tracking-widest mb-1">Makeup</p>
-                    <h3 class="font-semibold mb-2">Matte Velvet Lipstick</h3>
-                    <div class="flex justify-between items-center">
-                        <span class="gold-text font-bold">$25.00</span>
-                        <div class="text-xs text-yellow-400">
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-regular fa-star"></i>
+                <div class="bg-white group rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 reveal">
+                    <div class="relative overflow-hidden aspect-[4/5]">
+                        <img src="https://images.unsplash.com/photo-1596704017254-9b121068fb31?q=80&w=400" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                        <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                            <button onclick="addToCart('Velvet Lipstick', 25)" class="bg-white text-black px-6 py-2 rounded-full font-bold hover:bg-pink-500 hover:text-white transition shadow-lg">Add to Cart</button>
                         </div>
+                    </div>
+                    <div class="p-6 text-center">
+                        <p class="text-xs text-pink-400 font-bold tracking-widest mb-2 uppercase">Makeup</p>
+                        <h3 class="text-lg font-medium mb-2">Velvet Matte Red</h3>
+                        <p class="text-gray-900 font-bold">$25.00</p>
                     </div>
                 </div>
 
                 <!-- Product 3 -->
-                <div class="bg-white p-4 rounded-xl product-card relative shadow-sm">
-                    <div class="overflow-hidden rounded-lg mb-4 relative">
-                        <img src="https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&q=80&w=400" alt="Product" class="w-full h-64 object-cover">
-                        <button onclick="addToCart('Hydrating Mist', 30)" class="cart-btn absolute bottom-4 left-4 right-4 bg-pink-500 text-white py-2 rounded-lg font-medium">Add to Cart</button>
-                    </div>
-                    <p class="text-xs text-gray-400 uppercase tracking-widest mb-1">Skincare</p>
-                    <h3 class="font-semibold mb-2">Ocean Hydrating Mist</h3>
-                    <div class="flex justify-between items-center">
-                        <span class="gold-text font-bold">$30.00</span>
-                        <div class="text-xs text-yellow-400">
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
+                <div class="bg-white group rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 reveal">
+                    <div class="relative overflow-hidden aspect-[4/5]">
+                        <img src="https://images.unsplash.com/photo-1512496015851-a90fb38ba796?q=80&w=400" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                        <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                            <button onclick="addToCart('Mineral Mist', 32)" class="bg-white text-black px-6 py-2 rounded-full font-bold hover:bg-pink-500 hover:text-white transition shadow-lg">Add to Cart</button>
                         </div>
+                    </div>
+                    <div class="p-6 text-center">
+                        <p class="text-xs text-pink-400 font-bold tracking-widest mb-2 uppercase">Face Mist</p>
+                        <h3 class="text-lg font-medium mb-2">Mineral Hydration</h3>
+                        <p class="text-gray-900 font-bold">$32.00</p>
                     </div>
                 </div>
 
                 <!-- Product 4 -->
-                <div class="bg-white p-4 rounded-xl product-card relative shadow-sm">
-                    <div class="overflow-hidden rounded-lg mb-4 relative">
-                        <img src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&q=80&w=400" alt="Product" class="w-full h-64 object-cover">
-                        <button onclick="addToCart('Luxury Eye Palette', 60)" class="cart-btn absolute bottom-4 left-4 right-4 bg-pink-500 text-white py-2 rounded-lg font-medium">Add to Cart</button>
-                    </div>
-                    <p class="text-xs text-gray-400 uppercase tracking-widest mb-1">Makeup</p>
-                    <h3 class="font-semibold mb-2">Luxury Eye Palette</h3>
-                    <div class="flex justify-between items-center">
-                        <span class="gold-text font-bold">$60.00</span>
-                        <div class="text-xs text-yellow-400">
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star-half-stroke"></i>
+                <div class="bg-white group rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 reveal">
+                    <div class="relative overflow-hidden aspect-[4/5]">
+                        <img src="https://images.unsplash.com/photo-1571781926291-c477ebfd024b?q=80&w=400" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                        <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                            <button onclick="addToCart('Eye Palette', 55)" class="bg-white text-black px-6 py-2 rounded-full font-bold hover:bg-pink-500 hover:text-white transition shadow-lg">Add to Cart</button>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Testimonials -->
-    <section class="py-20 bg-white">
-        <div class="container mx-auto px-6 text-center">
-            <h2 class="text-3xl font-serif font-bold mb-12">What Our Beauties Say</h2>
-            <div class="grid md:grid-cols-3 gap-12">
-                <div class="italic">
-                    <p class="text-gray-600 mb-4">"The Rose Glow Serum transformed my skin! I've never felt more confident. Sporsika is now my go-to for all things beauty."</p>
-                    <h4 class="font-bold gold-text">— Sarah J.</h4>
-                </div>
-                <div class="italic">
-                    <p class="text-gray-600 mb-4">"High-quality makeup that lasts all day. The packaging is so elegant and the customer service is top-notch."</p>
-                    <h4 class="font-bold gold-text">— Emily R.</h4>
-                </div>
-                <div class="italic">
-                    <p class="text-gray-600 mb-4">"Finally found a brand that balances luxury and effectiveness. Their hair accessories are just stunning."</p>
-                    <h4 class="font-bold gold-text">— Maria K.</h4>
+                    <div class="p-6 text-center">
+                        <p class="text-xs text-pink-400 font-bold tracking-widest mb-2 uppercase">Makeup</p>
+                        <h3 class="text-lg font-medium mb-2">Sunset Nude Palette</h3>
+                        <p class="text-gray-900 font-bold">$55.00</p>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Contact & Socials -->
-    <section id="contact" class="py-20 bg-gray-50">
-        <div class="container mx-auto px-6 grid md:grid-cols-2 gap-16">
+    <section id="contact" class="py-24 bg-black text-white reveal">
+        <div class="container mx-auto px-6 grid md:grid-cols-2 gap-20">
             <div>
-                <h2 class="text-3xl font-serif font-bold mb-6">Get In Touch</h2>
-                <p class="text-gray-600 mb-8">Have questions about our products? Send us a message and our beauty experts will get back to you.</p>
-                <div class="space-y-4">
-                    <div class="flex items-center space-x-4">
-                        <i class="fa-solid fa-location-dot text-pink-500"></i>
-                        <span>123 Beauty Lane, Dhaka, Bangladesh</span>
-                    </div>
-                    <div class="flex items-center space-x-4">
-                        <i class="fa-solid fa-envelope text-pink-500"></i>
-                        <span>hello@sporsika.com</span>
-                    </div>
-                    <div class="flex items-center space-x-4">
-                        <i class="fa-brands fa-facebook text-pink-500 text-xl"></i>
-                        <a href="#" class="hover:text-pink-500">Find us on Facebook</a>
-                    </div>
+                <h2 class="text-4xl font-serif font-bold mb-8">Join the Glow</h2>
+                <p class="text-gray-400 text-lg mb-10 leading-relaxed">Subscribe to receive beauty tips, new arrival alerts, and exclusive Sporsika discounts.</p>
+                <div class="flex space-x-6">
+                    <a href="#" class="w-12 h-12 rounded-full border border-gray-700 flex items-center justify-center hover:bg-pink-500 hover:border-pink-500 transition duration-500">
+                        <i class="fa-brands fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="w-12 h-12 rounded-full border border-gray-700 flex items-center justify-center hover:bg-pink-500 hover:border-pink-500 transition duration-500">
+                        <i class="fa-brands fa-instagram"></i>
+                    </a>
+                    <a href="https://wa.me/8801XXXXXXXXX" class="w-12 h-12 rounded-full border border-gray-700 flex items-center justify-center hover:bg-green-500 hover:border-green-500 transition duration-500">
+                        <i class="fa-brands fa-whatsapp"></i>
+                    </a>
                 </div>
             </div>
-            <form class="space-y-4 bg-white p-8 rounded-xl shadow-lg">
-                <input type="text" placeholder="Your Name" class="w-full p-3 border rounded-lg focus:outline-pink-400">
-                <input type="email" placeholder="Your Email" class="w-full p-3 border rounded-lg focus:outline-pink-400">
-                <textarea placeholder="Your Message" rows="4" class="w-full p-3 border rounded-lg focus:outline-pink-400"></textarea>
-                <button class="w-full bg-black text-white py-3 rounded-lg hover:bg-gray-800 transition">Send Message</button>
+            <form class="space-y-6">
+                <div class="grid grid-cols-2 gap-4">
+                    <input type="text" placeholder="First Name" class="bg-transparent border-b border-gray-700 py-3 focus:outline-none focus:border-pink-500 transition">
+                    <input type="text" placeholder="Last Name" class="bg-transparent border-b border-gray-700 py-3 focus:outline-none focus:border-pink-500 transition">
+                </div>
+                <input type="email" placeholder="Email Address" class="w-full bg-transparent border-b border-gray-700 py-3 focus:outline-none focus:border-pink-500 transition">
+                <button class="bg-white text-black px-10 py-4 rounded-full font-bold hover:bg-pink-500 hover:text-white transition duration-500">Send Message</button>
             </form>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="bg-white py-10 border-t border-pink-100">
-        <div class="container mx-auto px-6 text-center">
-            <div class="text-xl font-serif font-bold tracking-widest text-pink-600 mb-4">
-                SPORSIKA BEAUTY MALL
-            </div>
-            <p class="text-gray-400 text-sm mb-6">&copy; 2024 Sporsika Beauty Mall. All rights reserved.</p>
-            <div class="flex justify-center space-x-6 text-gray-500">
-                <a href="#" class="hover:text-pink-500"><i class="fa-brands fa-facebook-f"></i></a>
-                <a href="#" class="hover:text-pink-500"><i class="fa-brands fa-instagram"></i></a>
-                <a href="#" class="hover:text-pink-500"><i class="fa-brands fa-pinterest-p"></i></a>
-            </div>
-        </div>
+    <footer class="bg-black py-12 border-t border-gray-900 text-center">
+        <p class="text-gray-500 text-sm tracking-widest">&copy; 2024 SPORSIKA BEAUTY MALL. ALL RIGHTS RESERVED.</p>
     </footer>
 
-    <!-- Shopping Cart Drawer (UI Only) -->
-    <div id="cart-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-[60] hidden"></div>
-    <div id="cart-drawer" class="fixed top-0 right-0 h-full w-full max-w-sm bg-white z-[70] shadow-2xl p-6 flex flex-col">
-        <div class="flex justify-between items-center mb-8 border-b pb-4">
-            <h2 class="text-xl font-bold">Your Bag</h2>
-            <button id="close-cart" class="text-2xl">&times;</button>
+    <!-- Cart Drawer -->
+    <div id="cart-overlay" class="fixed inset-0 bg-black/60 z-[60] hidden backdrop-blur-sm"></div>
+    <div id="cart-drawer" class="fixed top-0 right-0 h-full w-full max-w-md bg-white z-[70] shadow-2xl flex flex-col p-8">
+        <div class="flex justify-between items-center mb-10">
+            <h2 class="text-2xl font-serif font-bold">Shopping Bag</h2>
+            <button id="close-cart" class="text-3xl hover:text-pink-500">&times;</button>
         </div>
-        <div id="cart-items" class="flex-grow overflow-y-auto space-y-4 text-gray-500">
-            <!-- Items will appear here -->
-            <p class="text-center py-10">Your cart is empty.</p>
+        <div id="cart-items" class="flex-grow overflow-y-auto space-y-6">
+            <p class="text-center text-gray-400 py-20">Your bag is currently empty.</p>
         </div>
-        <div class="border-t pt-6">
-            <div class="flex justify-between text-xl font-bold mb-4">
-                <span>Total:</span>
+        <div class="pt-8 border-t">
+            <div class="flex justify-between text-2xl font-serif mb-6">
+                <span>Total</span>
                 <span id="cart-total">$0.00</span>
             </div>
-            <button class="w-full bg-pink-500 text-white py-4 rounded-lg font-bold hover:bg-pink-600 transition">Checkout Now</button>
+            <button class="w-full bg-black text-white py-5 rounded-full font-bold hover:bg-pink-600 transition shadow-xl uppercase tracking-widest text-sm">Proceed to Checkout</button>
         </div>
     </div>
 
-    <!-- JavaScript -->
+    <!-- WhatsApp Button -->
+    <a href="https://wa.me/8801XXXXXXXXX" class="fixed bottom-8 right-8 z-40 bg-green-500 text-white w-16 h-16 rounded-full flex items-center justify-center text-3xl shadow-2xl animate-bounce hover:scale-110 transition">
+        <i class="fa-brands fa-whatsapp"></i>
+    </a>
+
+    <!-- Scripts -->
     <script>
-        // Mobile Menu Toggle
-        const menuBtn = document.getElementById('mobile-menu-btn');
-        const closeMenuBtn = document.getElementById('close-mobile-menu');
-        const mobileMenu = document.getElementById('mobile-menu');
-        const mobileLinks = document.querySelectorAll('.mobile-link');
+        // Scroll Reveal Animation
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                var elementVisible = 150;
+                if (elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+        window.addEventListener("scroll", reveal);
+        window.onload = reveal;
 
-        menuBtn.addEventListener('click', () => mobileMenu.classList.remove('hidden'));
-        closeMenuBtn.addEventListener('click', () => mobileMenu.classList.add('hidden'));
-        mobileLinks.forEach(link => link.addEventListener('click', () => mobileMenu.classList.add('hidden')));
-
-        // Cart Toggle
+        // Shopping Cart Logic
+        let cart = [];
         const openCartBtn = document.getElementById('open-cart');
         const closeCartBtn = document.getElementById('close-cart');
         const cartDrawer = document.getElementById('cart-drawer');
         const cartOverlay = document.getElementById('cart-overlay');
+        const cartItemsContainer = document.getElementById('cart-items');
+        const cartTotalDisplay = document.getElementById('cart-total');
+        const cartCount = document.getElementById('cart-count');
 
         function toggleCart() {
             cartDrawer.classList.toggle('open');
             cartOverlay.classList.toggle('hidden');
         }
 
-        openCartBtn.addEventListener('click', toggleCart);
-        closeCartBtn.addEventListener('click', toggleCart);
-        cartOverlay.addEventListener('click', toggleCart);
-
-        // Simple Cart Logic
-        let cart = [];
-        const cartCount = document.getElementById('cart-count');
-        const cartItemsContainer = document.getElementById('cart-items');
-        const cartTotalDisplay = document.getElementById('cart-total');
+        openCartBtn.onclick = toggleCart;
+        closeCartBtn.onclick = toggleCart;
+        cartOverlay.onclick = toggleCart;
 
         function addToCart(name, price) {
             cart.push({ name, price });
             updateCartUI();
-            
-            // Visual feedback
-            alert(`${name} added to cart!`);
+            toggleCart();
         }
 
         function updateCartUI() {
             cartCount.innerText = cart.length;
-            
             if (cart.length === 0) {
-                cartItemsContainer.innerHTML = '<p class="text-center py-10">Your cart is empty.</p>';
+                cartItemsContainer.innerHTML = '<p class="text-center text-gray-400 py-20">Your bag is currently empty.</p>';
                 cartTotalDisplay.innerText = '$0.00';
                 return;
             }
@@ -372,16 +330,15 @@
             cart.forEach((item, index) => {
                 total += item.price;
                 html += `
-                    <div class="flex justify-between items-center bg-pink-50 p-3 rounded-lg">
+                    <div class="flex justify-between items-center bg-pink-50 p-4 rounded-xl animate__animated animate__fadeInUp">
                         <div>
-                            <p class="font-semibold text-gray-800">${item.name}</p>
-                            <p class="text-sm gold-text">$${item.price.toFixed(2)}</p>
+                            <p class="font-bold text-gray-800">${item.name}</p>
+                            <p class="text-sm text-pink-500">$${item.price.toFixed(2)}</p>
                         </div>
-                        <button onclick="removeFromCart(${index})" class="text-red-400 hover:text-red-600"><i class="fa-solid fa-trash-can"></i></button>
+                        <button onclick="removeFromCart(${index})" class="text-red-400 hover:text-red-600"><i class="fa-solid fa-trash"></i></button>
                     </div>
                 `;
             });
-            
             cartItemsContainer.innerHTML = html;
             cartTotalDisplay.innerText = `$${total.toFixed(2)}`;
         }
